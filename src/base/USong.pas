@@ -158,7 +158,7 @@ type
     Resolution: integer;
     BPM:        array of TBPM;
     GAP:        real; // in miliseconds
-    
+
     Encoding:   TEncoding;
     PreviewStart: real;   // in seconds
     HasPreview: boolean;  // set if a valid PreviewStart was read
@@ -929,6 +929,8 @@ begin
 
     //MP3 File //Test if Exists
     Self.Mp3 := FindSongFile(Self.Path, '*.mp3');
+    if not (Self.Path.Append(Self.Mp3).IsFile()) then
+      Self.Mp3 := FindSongFile(Self.Path, '*.ogg');
     //Add Mp3 Flag to Done
     if (Self.Path.Append(Self.Mp3).IsFile()) then
       Done := Done or 4;
@@ -952,12 +954,14 @@ begin
 
     //Cover Picture
     self.Cover := FindSongFile(Path, '*[CO].jpg');
+    if not (self.Path.Append(self.Cover).IsFile()) then
+      self.Cover := FindSongFile(Self.Path, 'cover.png');
 
     //Background Picture
     self.Background := FindSongFile(Path, '*[BG].jpg');
 
     // Video File
-    //    self.Video := Value
+    self.Video := FindSongFile(Path, 'video.m4v');
 
     // Video Gap
     //  self.VideoGAP := StrtoFloatI18n( Value )
@@ -1131,7 +1135,7 @@ begin
         if (Self.Path.Append(EncFile).IsFile) then
         begin
           self.Mp3 := EncFile;
-          
+
           //Add Mp3 Flag to Done
           Done := Done or 4;
         end
@@ -1835,4 +1839,3 @@ begin
 end;
 
 end.
-
